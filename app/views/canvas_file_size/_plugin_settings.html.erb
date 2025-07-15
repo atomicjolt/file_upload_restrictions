@@ -1,0 +1,31 @@
+<!--
+Copyright (C) 2025 Atomic Jolt
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU Affero General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU Affero General Public License for more details.
+You should have received a copy of the GNU Affero General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+
+<%= fields_for :settings do |f| %>
+  <table style="width: 500px;" class="formtable">
+    <tr>
+      <td colspan="2">
+        <%= mt :description, "Specify file size and type restrictions" %>
+      </td>
+    </tr>
+    <tr>
+      <td><%= f.blabel :global_max_file_size, en: "Max Size (integer in MB)" %></td>
+      <td><%= f.text_field :global_max_file_size, value: settings[:global_max_file_size]%></td>
+    </tr>
+    <tr>
+      <td><%= f.blabel :allowed_file_types, en: "Allowed File Types" %></td>
+      <td><%= f.text_field :allowed_file_types, value: settings[:allowed_file_types] %></td>
+    </tr>
+  </table>
+<% end %>
