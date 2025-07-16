@@ -20,6 +20,7 @@ module CanvasFileSize
 
   class Engine < ::Rails::Engine
     config.paths["lib"].eager_load!
+    config.paths["app/models"].eager_load!
 
     config.to_prepare do
       Canvas::Plugin.register(

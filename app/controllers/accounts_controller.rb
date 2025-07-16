@@ -23,7 +23,7 @@ require "byebug"
 
 FILE_SIZE_ENGINE_ROOT = CanvasFileSize::Engine.root
 
-class AccountsController
+AccountsController.class_eval do
   # unmodified_update = instance_method(:update)
   alias unmodified_permitted_account_attributes permitted_account_attributes
   alias ORIG_PERMITTED_SETTINGS_FOR_UPDATE PERMITTED_SETTINGS_FOR_UPDATE

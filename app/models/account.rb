@@ -17,10 +17,14 @@
 # https://github.com/instructure/canvas-lms/app/controllers/enrollments_api_controller.rb
 
 
-require_dependency "app/models/accounts"
+require_dependency "app/models/account"
 
 FILE_SIZE_ENGINE_ROOT = CanvasFileSize::Engine.root
 
-Accounts.class_eval do
+Account.class_eval do
+  include Context
+  include ::Account::Settings
+  include ::Csp::AccountHelper
+
   add_setting: :max_file_size, inheritable: true
 end
