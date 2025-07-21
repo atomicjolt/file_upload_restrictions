@@ -21,13 +21,13 @@ require_dependency "app/controllers/accounts_controller"
 require "byebug"
 
 
-FILE_SIZE_ENGINE_ROOT = CanvasFileSize::Engine.root
+FILE_SIZE_ENGINE_ROOT = FileUploadRestrictions::Engine.root
 
 AccountsController.class_eval do
   # unmodified_update = instance_method(:update)
   alias unmodified_permitted_account_attributes permitted_account_attributes
   alias ORIG_PERMITTED_SETTINGS_FOR_UPDATE PERMITTED_SETTINGS_FOR_UPDATE
-  if (file_size_plugin = Canvas::Plugin.find("canvas_file_size")) && file_size_plugin.enabled?
+  if (file_size_plugin = Canvas::Plugin.find("file_upload_restrictions")) && file_size_plugin.enabled?
     debugger
     byebug
     pry
@@ -37,7 +37,7 @@ AccountsController.class_eval do
   def permitted_account_attributes
     byebug
     debugger
-    if (file_size_plugin = Canvas::Plugin.find("canvas_file_size")) && file_size_plugin.enabled?
+    if (file_size_plugin = Canvas::Plugin.find("file_upload_restrictions")) && file_size_plugin.enabled?
       [:max_file_size].union(unmodified_permitted_account_attributes)
     else
       unmodified_permitted_account_attributes
@@ -45,7 +45,7 @@ AccountsController.class_eval do
   end
 
   # define_method(:update) do
-  #   if (file_size_plugin = Canvas::Plugin.find("canvas_file_size")) && file_size_plugin.enabled?
+  #   if (file_size_plugin = Canvas::Plugin.find("file_upload_restrictions")) && file_size_plugin.enabled?
   #     return update_api if api_request?
   #   end
   #   unmodified_update.bind(self).()

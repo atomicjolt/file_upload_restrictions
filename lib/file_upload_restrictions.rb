@@ -13,8 +13,8 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-require "canvas_file_size/version"
-require "canvas_file_size/engine"
+require "file_upload_restrictions/version"
+require "file_upload_restrictions/engine"
 
-module CanvasFileSize
+module FileUploadRestrictions
 end

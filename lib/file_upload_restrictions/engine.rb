@@ -13,9 +13,9 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-module CanvasFileSize
-  NAME = "Canvas File Size".freeze
-  DISPLAY_NAME = "Canvas File Size".freeze
+module FileUploadRestrictions
+  NAME = "File Upload Restrictions".freeze
+  DISPLAY_NAME = "File Upload Restrictions".freeze
   DESCRIPTION = "Enables custom file restrictions".freeze
 
   class Engine < ::Rails::Engine
@@ -24,15 +24,15 @@ module CanvasFileSize
 
     config.to_prepare do
       Canvas::Plugin.register(
-        :canvas_file_size,
+        :file_upload_restrictions,
         nil,
-        name: -> { I18n.t(:canvas_file_size_name, NAME) },
-        display_name: -> { I18n.t :canvas_file_size_display, DISPLAY_NAME },
+        name: -> { I18n.t(:file_upload_restrictions_name, NAME) },
+        display_name: -> { I18n.t :file_upload_restrictions_display, DISPLAY_NAME },
         author: "Atomic Jolt",
         author_website: "http://www.atomicjolt.com/",
         description: -> { t(:description, DESCRIPTION) },
-        version: CanvasFileSize::Version,
-        settings_partial: 'canvas_file_size/plugin_settings',
+        version: FileUploadRestrictions::Version,
+        settings_partial: 'file_upload_restrictions/plugin_settings',
         settings: {
           global_max_file_size: nil,
           allowed_file_types: nil
@@ -40,13 +40,13 @@ module CanvasFileSize
       )
 
       default_allowed_file_types = ["js","html","imscc","zip","xml"]
-      if ActiveRecord::Base.connection.table_exists?('plugin_settings') && Canvas::Plugin.find(:canvas_file_size).enabled?
+      if ActiveRecord::Base.connection.table_exists?('plugin_settings') && Canvas::Plugin.find(:file_upload_restrictions).enabled?
         ActiveSupport.on_load(:action_controller) do
           # Prepend the engine's view path to the front of the lookup paths to use custom "_additional_settings" partial
-          prepend_view_path CanvasFileSize::Engine.root.join('app', 'views')
+          prepend_view_path FileUploadRestrictions::Engine.root.join('app', 'views')
         end
         Account::Settings.define_singleton_method :file_type_restrictions do
-          @plugin ||= PluginSetting.find_by(name: "canvas_file_size")
+          @plugin ||= PluginSetting.find_by(name: "file_upload_restrictions")
           # max_file_size=@plugin.settings[:global_max_file_size].present? ? @plugin.settings[:global_max_file_size].to_i : nil
           allowed_file_types=@plugin.settings[:allowed_file_types].present? ? @plugin.settings[:allowed_file_types].downcase.split(',').union(default_allowed_file_types) : default_allowed_file_types
           allowed_file_types

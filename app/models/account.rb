@@ -17,9 +17,10 @@
 # https://github.com/instructure/canvas-lms/app/controllers/enrollments_api_controller.rb
 
 
-require_dependency "app/models/account"
+require "app/models/account"
+require "app/models/account/settings"
 
-FILE_SIZE_ENGINE_ROOT = CanvasFileSize::Engine.root
+FILE_SIZE_ENGINE_ROOT = FileUploadRestrictions::Engine.root
 
 Account.class_eval do
   include Context

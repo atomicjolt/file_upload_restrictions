@@ -17,7 +17,6 @@
 %>
 
 <div><span><%= t("TESTING VIEW") %></span></div>
-<% debugger %>
 <%= f.fields_for :settings do |settings| %>
     <%= settings.label      :max_file_size, t('labels.file_size', 'Max File Size (in MB):') %>
     <%= settings.text_field :max_file_size, placeholder: 'Account Default', value: @account.settings[:max_file_size] %>

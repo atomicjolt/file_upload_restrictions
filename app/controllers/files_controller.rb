@@ -19,7 +19,7 @@
 
 require_dependency "app/controllers/files_controller"
 
-FILE_SIZE_ENGINE_ROOT = CanvasFileSize::Engine.root
+FILE_SIZE_ENGINE_ROOT = FileUploadRestrictions::Engine.root
 
 class FilesController
   unmodified_upload = instance_method(:api_create)
@@ -33,7 +33,7 @@ class FilesController
     @context = Context.find_by_asset_string(params[:attachment][:context_code])
     size_limit = @context&.account.settings[:max_file_size]
 
-    if (file_size_plugin = Canvas::Plugin.find("canvas_file_size")) && file_size_plugin.enabled?
+    if (file_size_plugin = Canvas::Plugin.find("file_upload_restrictions")) && file_size_plugin.enabled?
       if !(Account::Settings.file_type_restrictions.include? File.extname(params[:attachment][:filename]).delete_prefix("."))
         render status: :bad_request, json: {
           message: "File type not allowed for upload"
