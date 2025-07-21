@@ -19,6 +19,8 @@ module FileUploadRestrictions
   DESCRIPTION = "Enables custom file restrictions".freeze
 
   class Engine < ::Rails::Engine
+    isolate_namespace FileUploadRestrictions
+
     config.paths["lib"].eager_load!
     config.paths["app/models"].eager_load!
 
@@ -38,6 +40,33 @@ module FileUploadRestrictions
           allowed_file_types: nil
         }
       )
+
+      if defined?(::AccountsController) && Canvas::Plugin.find(:file_upload_restrictions).enabled?
+        unless ::AccountsController.ancestors.include?(FileUploadRestrictions::AccountsControllerOverrides)
+          ::AccountsController.prepend FileUploadRestrictions::AccountsControllerOverrides
+          puts "Prepended FileUploadRestrictions::AccountsControllerOverrides to AccountsController."
+        end
+
+        ::AccountsController.class_eval do
+          if const_defined?(:PERMITTED_SETTINGS_FOR_UPDATE)
+            current_settings = const_get(:PERMITTED_SETTINGS_FOR_UPDATE)
+            unfrozen_settings = current_settings.dup
+            unless unfrozen_settings.include?(:max_file_size)
+              updated_settings = unfrozen_settings | [{ max_file_size: [:value, :locked] }.freeze]
+              remove_const(:PERMITTED_SETTINGS_FOR_UPDATE)
+              const_set(:PERMITTED_SETTINGS_FOR_UPDATE, updated_settings.freeze)
+              puts "Added :max_file_size to PERMITTED_SETTINGS_FOR_UPDATE"
+            end
+          end
+        end
+      end
+
+      if defined?(::Account) && Canvas::Plugin.find(:file_upload_restrictions).enabled?
+        unless ::Account.ancestors.include?(FileUploadRestrictions::AccountsModelOverrides)
+          ::Account.prepend FileUploadRestrictions::AccountsModelOverrides
+          puts "Prepended FileUploadRestrictions::AccountsModelOverrides to Account model."
+        end
+      end
 
       default_allowed_file_types = ["js","html","imscc","zip","xml"]
       if ActiveRecord::Base.connection.table_exists?('plugin_settings') && Canvas::Plugin.find(:file_upload_restrictions).enabled?

@@ -16,8 +16,23 @@
 # with this program. If not, see <http://www.gnu.org/licenses/>.
 %>
 
-<div><span><%= t("TESTING VIEW") %></span></div>
 <%= f.fields_for :settings do |settings| %>
-    <%= settings.label      :max_file_size, t('labels.file_size', 'Max File Size (in MB):') %>
-    <%= settings.text_field :max_file_size, placeholder: 'Account Default', value: @account.settings[:max_file_size] %>
+  <%= settings.fields_for :max_file_size do |r| %>
+    <% hash = @account.max_file_size %>
+    <% disabled = hash[:locked] && hash[:inherited] %>
+    <tr>
+      <td colspan="2">
+        <%= r.label :value , t('labels.file_size', 'Max File Size (in MB):') %>
+        <%= r.text_field :value, value: hash[:value], placeholder: 'Account Default', :disabled => disabled %>
+      </td>
+    </tr>
+    <% unless disabled %>
+      <tr>
+        <td colspan="2" class="sub_checkbox">
+          <%= r.check_box :locked, :checked => hash[:locked] %>
+          <%= r.label :locked, :en => "Lock this setting for sub-accounts and courses" %>
+        </td>
+      </tr>
+    <% end %>
+  <% end %>
 <% end %>
