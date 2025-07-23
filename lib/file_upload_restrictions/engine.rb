@@ -41,6 +41,13 @@ module FileUploadRestrictions
         }
       )
 
+      if defined?(::FilesController) && Canvas::Plugin.find(:file_upload_restrictions).enabled? && (Canvas::Plugin.find(:file_upload_restrictions).settings[:enable_file_types] == "true")
+        unless ::FilesController.ancestors.include?(FileUploadRestrictions::FilesControllerOverrides)
+          ::FilesController.prepend FileUploadRestrictions::FilesControllerOverrides
+          puts "Prepended FileUploadRestrictions::FilesControllerOverrides to FilesController."
+        end
+      end
+
       if defined?(::AccountsController) && Canvas::Plugin.find(:file_upload_restrictions).enabled?
         unless ::AccountsController.ancestors.include?(FileUploadRestrictions::AccountsControllerOverrides)
           ::AccountsController.prepend FileUploadRestrictions::AccountsControllerOverrides
@@ -68,17 +75,21 @@ module FileUploadRestrictions
         end
       end
 
-      default_allowed_file_types = ["js","html","imscc","zip","xml"]
       if ActiveRecord::Base.connection.table_exists?('plugin_settings') && Canvas::Plugin.find(:file_upload_restrictions).enabled?
-        ActiveSupport.on_load(:action_controller) do
-          # Prepend the engine's view path to the front of the lookup paths to use custom "_additional_settings" partial
-          prepend_view_path FileUploadRestrictions::Engine.root.join('app', 'views')
+        @plugin ||= PluginSetting.find_by(name: "file_upload_restrictions")
+        if @plugin.settings[:enable_max_file_size] == "true"
+          ActiveSupport.on_load(:action_controller) do
+            # Prepend the engine's view path to the front of the lookup paths to use custom "_additional_settings" partial
+            prepend_view_path FileUploadRestrictions::Engine.root.join('app', 'views')
+          end
         end
-        Account::Settings.define_singleton_method :file_type_restrictions do
-          @plugin ||= PluginSetting.find_by(name: "file_upload_restrictions")
-          # max_file_size=@plugin.settings[:global_max_file_size].present? ? @plugin.settings[:global_max_file_size].to_i : nil
-          allowed_file_types=@plugin.settings[:allowed_file_types].present? ? @plugin.settings[:allowed_file_types].downcase.split(',').union(default_allowed_file_types) : default_allowed_file_types
-          allowed_file_types
+        if @plugin.settings[:enable_file_types] == "true"
+          Account::Settings.define_singleton_method :file_type_restrictions do
+            @plugin ||= PluginSetting.find_by(name: "file_upload_restrictions")
+            default_allowed_file_types = ["js","html","imscc","zip","xml"]
+            allowed_file_types=@plugin.settings[:allowed_file_types].present? ? @plugin.settings[:allowed_file_types].downcase.split(',').union(default_allowed_file_types) : default_allowed_file_types
+            allowed_file_types
+          end
         end
       end
 

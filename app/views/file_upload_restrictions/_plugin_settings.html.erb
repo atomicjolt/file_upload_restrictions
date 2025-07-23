@@ -20,10 +20,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
       </td>
     </tr>
     <tr>
-      <td><%= f.blabel :global_max_file_size, en: "Max Size (integer in MB)" %></td>
-      <td><%= f.text_field :global_max_file_size, value: settings[:global_max_file_size]%></td>
+      <td><%= f.check_box :enable_max_file_size, { checked: Canvas::Plugin.value_to_boolean(settings[:enable_max_file_size])}, 'true', 'false' %></td>
+      <td><%= f.label :enable_max_file_size, :en => "Enable Setting Max file sizes in account settings" %></td>
     </tr>
     <tr>
+      <td><%= f.check_box :enable_file_types, { checked: Canvas::Plugin.value_to_boolean(settings[:enable_file_types])}, 'true', 'false' %></td>
+      <td><%= f.label :enable_file_types, :en => "Enable restricting file types" %></td>
       <td><%= f.blabel :allowed_file_types, en: "Allowed File Types" %></td>
       <td><%= f.text_field :allowed_file_types, value: settings[:allowed_file_types] %></td>
     </tr>
