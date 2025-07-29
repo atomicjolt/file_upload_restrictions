@@ -37,7 +37,8 @@ module FileUploadRestrictions
         settings_partial: 'file_upload_restrictions/plugin_settings',
         settings: {
           global_max_file_size: nil,
-          allowed_file_types: nil
+          allowed_file_types: nil,
+          file_type_error_message: nil
         }
       )
 
