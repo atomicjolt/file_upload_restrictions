@@ -1,4 +1,4 @@
-# Copyright (C) 2022 Atomic Jolt
+# Copyright (C) 2025 Atomic Jolt
 
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Affero General Public License as published by
