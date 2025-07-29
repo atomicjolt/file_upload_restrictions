@@ -26,9 +26,14 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
     <tr>
       <td><%= f.check_box :enable_file_types, { checked: Canvas::Plugin.value_to_boolean(settings[:enable_file_types])}, 'true', 'false' %></td>
       <td><%= f.label :enable_file_types, :en => "Enable restricting file types" %></td>
+    </tr>
+    <tr>
       <td><%= f.blabel :allowed_file_types, en: "Allowed File Types" %></td>
       <td><%= f.text_field :allowed_file_types, value: settings[:allowed_file_types] %></td>
-      <td><span>Always allowed file types for default Canvas functionality: js,html,imscc,zip,xml</span></td>
+    </tr>
+    <tr>
+      <td><span>Always allowed file types for default Canvas functionality:</span></td>
+      <td><span>js,html,imscc,zip,xml</span></td>
     </tr>
     <tr>
       <td><%= f.blabel :file_type_error_message, en: "Error message for allowed file types" %></td>
