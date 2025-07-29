@@ -17,7 +17,6 @@ module FileUploadRestrictions
             }
             return
           end
-          # if (size_limit && ((size_limit * 1024 * 1024) <= params[:attachment][:size]))
           if (size_limit && ((size_limit * 1024 * 1024) <= params[:attachment][:uploaded_data].tempfile.size))
             render status: :payload_too_large, json: {
               message: "File size is larger than allowed maximum of #{size_limit} MB",
