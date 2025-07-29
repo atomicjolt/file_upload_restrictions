@@ -1,0 +1,34 @@
+<!--
+Copyright (C) 2025 Atomic Jolt
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU Affero General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU Affero General Public License for more details.
+You should have received a copy of the GNU Affero General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+
+<%= f.fields_for :settings do |settings| %>
+  <%= settings.fields_for :max_file_size do |r| %>
+    <% hash = @account.max_file_size %>
+    <% disabled = hash[:locked] && hash[:inherited] %>
+    <tr>
+      <td colspan="2">
+        <%= r.label :value , t('labels.file_size', 'Max File Size (in MB):') %>
+        <%= r.text_field :value, value: hash[:value], placeholder: 'Account Default', :disabled => disabled %>
+      </td>
+    </tr>
+    <% unless disabled %>
+      <tr>
+        <td colspan="2" class="sub_checkbox">
+          <%= r.check_box :locked, :checked => hash[:locked] %>
+          <%= r.label :locked, :en => "Lock this setting for sub-accounts and courses" %>
+        </td>
+      </tr>
+    <% end %>
+  <% end %>
+<% end %>

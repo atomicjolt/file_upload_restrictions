@@ -1,0 +1,43 @@
+<!--
+Copyright (C) 2025 Atomic Jolt
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU Affero General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU Affero General Public License for more details.
+You should have received a copy of the GNU Affero General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+
+<%= fields_for :settings do |f| %>
+  <table style="width: 500px;" class="formtable">
+    <tr>
+      <td colspan="2">
+        <%= mt :description, "Specify file size and type restrictions" %>
+      </td>
+    </tr>
+    <tr>
+      <td><%= f.check_box :enable_max_file_size, { checked: Canvas::Plugin.value_to_boolean(settings[:enable_max_file_size])}, 'true', 'false' %></td>
+      <td><%= f.label :enable_max_file_size, :en => "Enable Setting Max file sizes in account settings" %></td>
+    </tr>
+    <tr>
+      <td><%= f.check_box :enable_file_types, { checked: Canvas::Plugin.value_to_boolean(settings[:enable_file_types])}, 'true', 'false' %></td>
+      <td><%= f.label :enable_file_types, :en => "Enable restricting file types" %></td>
+    </tr>
+    <tr>
+      <td><%= f.blabel :allowed_file_types, en: "Allowed File Types" %></td>
+      <td><%= f.text_field :allowed_file_types, value: settings[:allowed_file_types] %></td>
+    </tr>
+    <tr>
+      <td><span>Always allowed file types for default Canvas functionality:</span></td>
+      <td><span>js,html,imscc,zip,xml</span></td>
+    </tr>
+    <tr>
+      <td><%= f.blabel :file_type_error_message, en: "Error message for allowed file types" %></td>
+      <td><%= f.text_field :file_type_error_message, value: settings[:file_type_error_message] %></td>
+    </tr>
+  </table>
+<% end %>
