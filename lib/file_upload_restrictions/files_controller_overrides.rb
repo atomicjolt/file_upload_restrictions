@@ -10,7 +10,7 @@ module FileUploadRestrictions
         if (file_size_plugin = Canvas::Plugin.find("file_upload_restrictions")) && file_size_plugin.enabled? && (file_size_plugin.settings[:enable_file_types] == "true")
           if !(Account::Settings.file_type_restrictions.include? File.extname(params[:attachment][:uploaded_data].original_filename).delete_prefix("."))
             custom_message = Canvas::Plugin.find("file_upload_restrictions").settings[:file_type_error_message]
-            not_allowed = custom_message.nil? : "File type not allowed." : custom_message
+            not_allowed = custom_message.nil? ? "File type not allowed." : custom_message
             render status: :unsupported_media_type, json: {
               aj_message: not_allowed,
               message: not_allowed
